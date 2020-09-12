@@ -1,0 +1,6 @@
+---
+- aws
+- gcp
+- azure 
+- k8s
+- ansible

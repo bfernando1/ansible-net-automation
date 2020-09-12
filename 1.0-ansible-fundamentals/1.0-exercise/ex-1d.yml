@@ -1,0 +1,2 @@
+---
+rtr1: {host: 10.1.1.1, username: cisco, password: admin, device_type: router, use_session_log: true}
