@@ -1,0 +1,16 @@
+---
+- name: Exercise 3a
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - debug:
+        var: ansible_host
+- name: Another Play
+  hosts: cisco
+  gather_facts: no 
+  tasks:
+    - debug:
+        var: ansible_connection
+    - debug:
+        var: ansible_host
+        
