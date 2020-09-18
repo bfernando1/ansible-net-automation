@@ -1,0 +1,17 @@
+---
+- name: Exercise 1b
+  hosts: arista5
+  gather_facts: True
+  tasks:
+    - name: Print all facts 
+      debug:
+        var: ansible_facts 
+    - name: Print 1 fact 
+      debug: 
+        var: net_all_ipv4_addresses 
+    - name: Print network inventory facts 
+      debug: 
+        var: ansible_network_os
+    - name: Print host inventory facts 
+      debug:
+        var: ansible_host
