@@ -1,0 +1,12 @@
+---
+- name: Exercise 5b
+  hosts: juniper
+  gather_facts: False
+  tasks:
+    - name: Run `show interface terse`
+      junos_command:
+        commands: show interfaces terse
+      register: interfaces
+    - name: Display fxp0.0 
+      debug:
+        msg: "{{ interfaces['stdout_lines'][0][21] }}"
