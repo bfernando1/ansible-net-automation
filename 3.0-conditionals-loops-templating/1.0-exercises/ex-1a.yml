@@ -1,0 +1,33 @@
+---
+- name: Exercise 1a 
+  hosts: arista
+  gather_facts: True 
+  tasks:
+    #- debug:
+    #    var: ansible_net_model
+    #  when: ansible_net_model == "CSR1000V"
+    #- debug:
+    #    var: hostvars[inventory_hostname]
+    - name: Retrieve `show ip arp` from eos devices
+      eos_command: 
+        commands: show ip arp 
+      register: show_ip_arp_eos
+      when: '"eos" in ansible_network_os'
+
+    - name: Retrieve `show ip arp` from ios devices
+      ios_command: 
+        commands: show ip arp 
+      register: show_ip_arp_ios
+      when: '"ios" in ansible_network_os'
+
+    - name: Retrieve `show ip arp` from eos devices
+      junos_command: 
+        commands: show arp
+      register: show_arp_junos
+      when: '"junos" in ansible_network_os'
+   
+    - name: Display the output from show_ip_arp_eos
+      debug:
+        var: show_ip_arp_eos
+      when: '"eos" in ansible_network_os'
+    
