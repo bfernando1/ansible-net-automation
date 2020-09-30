@@ -1,0 +1,17 @@
+---
+- name: Exercise 5
+  hosts: nxos
+  gather_facts: False
+  tasks:
+    - name: Generate interface template
+      template:
+        src: interfaces.j2
+        dest: "./CFGS/{{ inventory_hostname }}/01-{{ inventory_hostname }}-intf.txt"
+    - name: Generate bgp template
+      template:
+        src: bgp.j2
+        dest: "./CFGS/{{ inventory_hostname }}/02-{{ inventory_hostname }}-bgp.txt"
+    - name: Combine the existing templates to a single template 
+      assemble:
+        src: "./CFGS/{{ inventory_hostname }}/"
+        dest: "./CFGS/{{ inventory_hostname }}-config.txt"
