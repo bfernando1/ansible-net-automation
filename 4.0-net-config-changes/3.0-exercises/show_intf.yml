@@ -1,0 +1,12 @@
+---
+- name: Show interfaces
+  hosts: nxos
+  gather_facts: False
+  tasks:
+    - name: Show interfaces
+      nxos_command:
+        commands: show run int e1/4
+      register: intf
+      
+    - debug:
+        var: intf["stdout_lines"]
