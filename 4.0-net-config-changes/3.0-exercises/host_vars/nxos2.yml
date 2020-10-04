@@ -1,3 +1,5 @@
 ---
+intf_name: Ethernet1/4
 ip_addr: 10.227.13.2
 net_mask: 24
+dest_addr: 10.227.13.1
