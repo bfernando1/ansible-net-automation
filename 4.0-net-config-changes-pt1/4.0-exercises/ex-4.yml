@@ -1,0 +1,36 @@
+---
+- name: Exercise 4
+  hosts: arista
+  gather_facts: False
+  tasks:
+    - name: Create a new VLAN {{ vlan_num }} Name {{ vlan_name }}
+      eos_vlans:
+        config:
+          - vlan_id: "{{ vlan_num }}"
+            name: "{{ vlan_name }}"
+            state: active
+        state: merged
+    
+    - name: Assign VLAN {{ vlan_num }} to interface {{ intf_name }}
+      eos_l2_interfaces:
+        config:
+        - name: "{{ intf_name }}"
+          access:
+            vlan: "{{ vlan_num }}"
+        state: merged
+ 
+    - name: Perform `show vlan | json`
+      eos_command:
+        commands: "show vlan | json"
+      register: vlan_json
+      
+    - name: Store current status of vlan {{ vlan_num }} and its assigned inteface
+      set_fact:
+        vlan_status: '{{ vlan_json.stdout_lines[0].vlans[vlan_num].status }}'
+        intf_dict: '{{ vlan_json.stdout_lines[0].vlans[vlan_num].interfaces }}'
+  
+    - name: Run through Assert to validate if Active
+      assert:
+        that:
+          - vlan_status == 'active'
+          - "'Ethernet5' in intf_dict"
