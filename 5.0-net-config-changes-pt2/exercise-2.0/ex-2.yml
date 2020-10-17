@@ -1,0 +1,20 @@
+---
+- name: Configure devices using cli_config and Jinja templates
+  hosts: cisco:nxos:arista:juniper
+  gather_facts: True
+  tasks:
+      # Cisco IOS and IOS-XE use jinja templating based on fact gathering. cli_config on junos only supports network_cli
+      # but needs to be on netconf for fact gathering. This use-case prevents us from using network_cli directly 
+    - name: Generating steps to deploy
+      set_fact:
+        config_steps: "{{ lookup('template', 'templates/{{ ansible_network_os }}/global.j2') }}"
+
+    - name: View generated steps
+      debug:
+        var: config_steps.splitlines()
+
+    - name: Deploy configs to devices 
+      vars:
+        ansible_connection: network_cli
+      cli_config:
+        config: "{{ config_steps }}"
