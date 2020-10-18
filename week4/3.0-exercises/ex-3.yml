@@ -1,0 +1,22 @@
+---
+- name: Exercise 3
+  hosts: nxos
+  gather_facts: False
+  tasks:
+    - name: Configure interface e1/4
+      nxos_l3_interfaces:
+        config:
+        - name: "{{ intf_name }}"
+          ipv4:
+          - address: "{{ ip_addr }}/{{ net_mask }}"
+        state: merged
+    
+    - name: Test connectivity between interfaces
+      net_ping:
+        dest: "{{ dest_addr }}"
+      register: ping_result
+    
+    - name: Assert Test for reachability
+      assert:
+        that:
+          - ping_result.packets_rx >= 4

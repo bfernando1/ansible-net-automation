@@ -1,0 +1,13 @@
+---
+- name: Exercise 3a 
+  hosts: nxos 
+  gather_facts: False 
+  tasks:
+    - name: Get output from show version 
+      nxos_command: 
+        commands: show version 
+      register: sh_version
+    - name: Show output 
+      debug:
+        msg: "{{ sh_version }}"
+
