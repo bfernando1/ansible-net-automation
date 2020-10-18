@@ -1,4 +1,0 @@
----
-vlan_num: "211"
-vlan_name: OOB_NET
-intf_name: Ethernet5
