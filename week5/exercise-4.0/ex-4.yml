@@ -1,0 +1,34 @@
+---
+- name: Deploy Jinja template to NX-OS devices
+  hosts: nxos
+  gather_facts: False
+  tasks:
+    - name: Generate interface template
+      template:
+        src: interfaces.j2
+        dest: "./CFGS/{{ inventory_hostname }}/01-{{ inventory_hostname }}-intf.txt"
+
+    - name: Generate bgp template
+      template:
+        src: bgp.j2
+        dest: "./CFGS/{{ inventory_hostname }}/02-{{ inventory_hostname }}-bgp.txt"
+
+    - name: Combine the existing templates to a single template 
+      assemble:
+        src: "./CFGS/{{ inventory_hostname }}/"
+        dest: "./CFGS/{{ inventory_hostname }}-config.txt"
+
+    - name: Push Jinja configs to devices
+      nxos_config:
+        src: "./CFGS/{{ inventory_hostname }}-config.txt"
+      
+    - name: Store the output of bgp summary
+      nxos_command:
+        commands: show ip bgp summary
+      register: bgp_summary
+      tags: debug
+      
+    - name: View output of bug summary
+      debug:
+        var: bgp_summary.stdout_lines[0]
+      tags: debug
