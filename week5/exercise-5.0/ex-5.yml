@@ -1,0 +1,18 @@
+---
+- name: Use SSH keys to execute a command
+  hosts: cisco1:cisco2
+  gather_facts: False
+  tasks:
+    - name: Run a command to view current users
+      ios_command:
+        commands: show users
+      register: users
+
+    - name: View output of last command
+      debug:
+        var: users.stdout_lines[0] 
+      tags: debug
+      
+    - name: Run validation check
+      assert:
+        that: '"student1" in users.stdout[0]'
