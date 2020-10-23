@@ -1,0 +1,7 @@
+---
+- name: Explore tags with import_tasks 
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Run the included tasks
+      import_tasks: subtask2.yml

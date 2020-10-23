@@ -1,0 +1,10 @@
+---
+- name: Playbook that uses import_tasks with variable
+  hosts: localhost
+  gather_facts: False
+  vars:
+    sub_task: "subtask1.yml"
+  tasks:
+    - name: Run the included task
+      import_tasks: "{{ sub_task }}"
+
