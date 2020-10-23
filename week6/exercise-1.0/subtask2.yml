@@ -1,0 +1,12 @@
+---
+- debug:
+    msg: "San Francisco DC"
+  tags: sfo
+
+- debug:
+    msg: "Oakland DC"
+  tags: oak
+
+- debug:
+    msg: "San Jose DC"
+  tags: sjc

@@ -1,0 +1,8 @@
+---
+- name: Explore tags with include_tasks 
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Run the included tasks
+      include_tasks: subtask2.yml
+      tags: always

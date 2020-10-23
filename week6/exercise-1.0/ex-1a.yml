@@ -1,0 +1,13 @@
+---
+- name: Playbook that uses include_tasks
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Run the included task
+      include_tasks: subtask1.yml
+      loop:
+        - "10.10.10.1"
+        - "10.10.10.2"
+        - "10.10.10.3"
+        - "10.10.10.4"
+         

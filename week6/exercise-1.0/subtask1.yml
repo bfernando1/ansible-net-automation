@@ -1,0 +1,4 @@
+---
+- name: Print IP address 
+  debug:
+    msg: "IP Address: {{ item }}"
