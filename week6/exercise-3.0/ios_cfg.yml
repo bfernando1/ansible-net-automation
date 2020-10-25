@@ -7,3 +7,8 @@
     - ip domain name {{ domain_name }}
     - ntp server {{ ntp_server1 }}
     - ntp server {{ ntp_server2 }}
+#   register: output
+# 
+# - name: View commands being used
+#   debug:
+#     var: output.commands
