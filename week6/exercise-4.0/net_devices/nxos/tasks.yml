@@ -1,0 +1,17 @@
+- name: Configure NX-OS devices
+  nxos_config:
+    lines:
+    - ip domain-name {{ domain_name }}
+    - ip name-server {{ dns_server1 }} {{ dns_server2 }}
+    - ntp server {{ ntp_server1 }} use-vrf management
+    - ntp server {{ ntp_server2 }} use-vrf default
+  register: output
+  tags: nxos
+
+- name: View commands that were executed
+  debug:
+    var: output.commands
+  when: output.changed is true 
+  tags: debug
+
+

@@ -1,0 +1,24 @@
+---
+- name: Run IOS tasks
+  include_tasks: net_devices/{{ ansible_facts.net_iostype|lower }}/tasks.yml
+  when: ansible_facts.net_iostype is defined and
+        ansible_facts.net_iostype == "IOS"
+  tags: ios
+
+- name: Run IOS-XE tasks
+  include_tasks: net_devices/{{ ansible_facts.net_iostype|lower }}/tasks.yml
+  when: ansible_facts.net_iostype is defined and
+        ansible_facts.net_iostype == "IOS-XE"
+  tags: ios-xe
+
+- name: Run NX-OS tasks
+  include_tasks: net_devices/{{ ansible_facts.net_system }}/tasks.yml
+  when: ansible_network_os == "nxos"
+  tags: nxos
+
+- name: Run EOS tasks 
+  include_tasks: net_devices/{{ ansible_facts.net_system }}/tasks.yml
+  when: ansible_network_os == "eos"
+  tags: eos
+
+

@@ -1,0 +1,13 @@
+---
+- name: Configure multiple network devices using a single play
+  hosts: arista:nxos:cisco
+  gather_facts: True
+  tasks:
+    - name: Look for device specific tasks
+      include_tasks: device_cfg.yml
+      tags: always
+      
+#    - name: view debug
+#      debug:
+#        var: ansible_facts
+#      tags: facts
