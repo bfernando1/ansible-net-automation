@@ -1,8 +1,24 @@
 - name: Create config file for vrf instances
   template:
     src: vrf_instance.j2 
-    dest: './CFGS/vrf_instance/vrf_instance.txt'
+    dest: './CFGS/vrf_staging/vrf_instance.txt'
+
 - name: Create config file for vrf interfaces
   template:
     src: vrf_interface.j2
-    dest: './CFGS/vrf_interface/vrf_interface.txt'
+    dest: './CFGS/vrf_staging/vrf_interface.txt'
+
+- name: Combine existing templates into one config file
+  assemble:
+    src: './CFGS/vrf_staging/'
+    dest: './CFGS/vrf_config.txt'
+
+- name: Deploy templates to devices
+  ios_config:
+    src: './CFGS/vrf_config.txt'
+  register: output
+
+- name: View commands being entered
+  debug:
+    var: output.commands
+  when: output.changed is true
