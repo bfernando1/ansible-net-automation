@@ -1,0 +1,26 @@
+---
+- name: Configure NTP for IOS devices
+  ios_config:
+    src: ios-ntp.j2
+  tags: ios
+  when: ansible_network_os == "ios"
+  register: output
+
+- name: Configure NTP for NX-OS devices
+  nxos_config:
+    src: nxos-ntp.j2
+  tags: nxos
+  when: ansible_network_os == "nxos"
+  register: output
+
+- name: Configure NTP for EOS devices
+  eos_config:
+    src: eos-ntp.j2
+  tags: eos
+  when: ansible_network_os == "eos"
+  register: output
+
+- debug:
+    var: output
+  when: output.changed is true
+  tags: debug

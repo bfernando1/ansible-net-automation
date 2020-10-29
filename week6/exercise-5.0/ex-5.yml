@@ -1,0 +1,9 @@
+---
+- name: Configure NTP using Ansible roles
+  hosts: cisco:nxos:arista
+  gather_facts: False
+  tasks:
+    - name: Look for NTP roles
+      include_role:
+        name: ntp
+      tags: always

@@ -1,0 +1,6 @@
+ip vrf red
+  rd 65000:2
+!
+ip vrf blue
+  rd 65000:1
+!

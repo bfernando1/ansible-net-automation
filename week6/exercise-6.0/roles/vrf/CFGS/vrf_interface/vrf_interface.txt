@@ -1,0 +1,6 @@
+interface Loopback99
+  ip vrf forwarding red
+!
+interface Loopback98
+  ip vrf forwarding blue
+!

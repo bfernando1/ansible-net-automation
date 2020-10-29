@@ -1,0 +1,6 @@
+---
+- name: Implement VRFs 
+  hosts: cisco5:cisco6
+  gather_facts: False
+  roles:
+    - vrf

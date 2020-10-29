@@ -1,0 +1,8 @@
+{%- for id in vrfs  %}
+{%- for k,v in id.items() -%}
+ip vrf {{ v.vrf_name }}
+  rd {{ v.vrf_rd }}
+!
+{%- endfor %}
+
+{% endfor %}

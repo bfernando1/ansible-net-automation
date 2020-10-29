@@ -1,0 +1,10 @@
+---
+vrfs:
+- vrf_red:
+    vrf_name: red
+    vrf_rd: "65000:2"
+    vrf_int: "Loopback99"
+- vrf_blue:
+    vrf_name: blue
+    vrf_rd: "65000:1"
+    vrf_int: "Loopback98"

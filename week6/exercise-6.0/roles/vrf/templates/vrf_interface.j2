@@ -1,0 +1,8 @@
+{%- for id in vrfs  %}
+{%- for k,v in id.items() -%}
+interface {{ v.vrf_int }}
+  ip vrf forwarding {{ v.vrf_name }}
+!
+{%- endfor %}
+
+{% endfor %}

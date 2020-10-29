@@ -1,0 +1,8 @@
+- name: Create config file for vrf instances
+  template:
+    src: vrf_instance.j2 
+    dest: './CFGS/vrf_instance/vrf_instance.txt'
+- name: Create config file for vrf interfaces
+  template:
+    src: vrf_interface.j2
+    dest: './CFGS/vrf_interface/vrf_interface.txt'
