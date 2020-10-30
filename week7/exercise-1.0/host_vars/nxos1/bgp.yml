@@ -1,0 +1,5 @@
+---
+bgp_peer_ip: "{{ hostvars['nxos2']['eth1_4_ip_address'] }}"
+bgp_advertise: 
+  - "{{ loopback101_ip_address }}/{{ loopback101_netmask }}"
+  - "{{ loopback102_ip_address }}/{{ loopback102_netmask }}"
