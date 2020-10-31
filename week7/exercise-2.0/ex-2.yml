@@ -1,0 +1,29 @@
+---
+- name: Use block/rescue to configure a device
+  hosts: arista
+  gather_facts: False
+  tasks:
+    - name: Configure DNS on Arista devices
+      block:
+        - name: Attempt configuration using an invalid password
+          vars:
+            ansible_ssh_pass: "invalid"
+          eos_config:
+            src: dns.j2  
+          register: output
+
+        - debug:
+            var: output.commands
+          when: output.changed is true
+
+      rescue:
+        - name: Configure devices using a valid password
+          vars: 
+            ansible_ssh_pass: "{{lookup('env', 'ANSIBLE_PASSWORD')}}"
+          eos_config:
+            src: dns.j2  
+          register: output
+
+        - debug:
+            var: output.commands
+          when: output.changed is true
