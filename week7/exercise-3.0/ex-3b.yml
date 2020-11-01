@@ -1,0 +1,20 @@
+---
+- name: Use textFSM index to retrieve structured data 
+  hosts: arista
+  gather_facts: False
+  vars:
+    platform: arista_eos
+    command: show vlan
+    textfsm_index: "/home/bradfernan/ntc-templates/templates"
+  tasks:
+    - name: Get current vlans
+      eos_command:
+        commands: "{{ command }}"
+      register: output
+    
+    - name: Use ntc_parse to store as json body
+      set_fact:
+        vlan_dict: "{{ output.stdout[0] | ntc_parse(command, platform, textfsm_index) }}"
+
+    - debug:
+        var: vlan_dict
