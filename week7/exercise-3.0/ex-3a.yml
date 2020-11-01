@@ -1,0 +1,27 @@
+---
+- name: Parse bgp routes using various methods
+  hosts: nxos
+  gather_facts: False
+  vars:
+    cmds: show ip bgp summary
+    fsm_template: "cisco_nxos_show_ip_bgp_summary.template"
+  tasks:
+    - name: Store the output of {{ cmds }}
+      nxos_command:
+        commands: "{{ cmds }}"
+      register: output
+    
+    - set_fact:
+        bgp_dict: "{{ output.stdout[0] | parse_cli_textfsm(fsm_template) }}"
+              
+    - name: Validate bgp received prefixes
+      assert:
+        that:
+          - bgp_dict[0].STATE_PFXRCD != "{{ item }}"
+      loop:
+        - "0"
+        - "1"
+        - "Shut"
+        - "Idle"
+      when: bgp_dict != []
+      

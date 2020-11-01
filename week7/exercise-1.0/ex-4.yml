@@ -2,6 +2,8 @@
 - name: Deploy Jinja template to NX-OS devices
   hosts: nxos
   gather_facts: False
+  vars:
+    commands: show ip bgp summary
   tasks:
     - name: Generate interface template
       template:
@@ -22,13 +24,13 @@
       nxos_config:
         src: "./CFGS/{{ inventory_hostname }}-config.txt"
       
-    - name: Store the output of bgp summary
+    - name: Store the output {{ commands }}
       nxos_command:
-        commands: show ip bgp summary
+        commands: "{{ commands }}"
       register: bgp_summary
       tags: debug
       
-    - name: View output of bug summary
+    - name: View output of {{ commands }}
       debug:
         var: bgp_summary.stdout_lines[0]
       tags: debug
