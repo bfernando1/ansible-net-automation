@@ -1,0 +1,23 @@
+---
+- name: View software version in structured data using Genie
+  hosts: nxos
+  gather_facts: False
+  collections:
+    - clay584.genie
+  vars:
+    cli_cmd: show version 
+  tasks:
+    - name: Execute {{ cli_cmd }}
+      cli_command:
+        command: "{{ cli_cmd  }}"
+      register: output
+      
+    - name: Store output and parse using Genie
+      set_fact:
+        cli_output: "{{ output.stdout | clay584.genie.parse_genie(command=cli_cmd, os=ansible_network_os) }}"
+    
+    - name: View software version
+      debug:
+        msg: 
+          - "{{ inventory_hostname }}:"
+          - "{{ cli_output.platform.software.system_version }}"

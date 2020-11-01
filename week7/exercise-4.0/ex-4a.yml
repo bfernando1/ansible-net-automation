@@ -1,0 +1,19 @@
+---
+- name: View interfaces in structured data using Genie
+  hosts: nxos
+  gather_facts: False
+  collections:
+    - clay584.genie
+  vars:
+    show_int: show interface
+  tasks:
+    - name: Execute {{ show_int }}
+      cli_command:
+        command: "{{ show_int }}"
+      register: output
+      
+    - set_fact:
+        cli_output: "{{ output.stdout | clay584.genie.parse_genie(command=show_int, os='nxos') }}"
+    
+    - debug:
+        var: cli_output
