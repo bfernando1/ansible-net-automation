@@ -1,0 +1,25 @@
+---
+- name: Use regex to get back structured data
+  hosts: nxos
+  gather_facts: False
+  vars:
+    cli_cmd: show lldp neighbors
+  tasks:
+    - name: Execute the command {{ cli_cmd }}
+      nxos_command:
+        commands: "{{ cli_cmd }}"
+      register: output
+     
+    - set_fact:
+        output: "{{ output.stdout[0] }}"
+    
+    - debug:
+        var: output.splitlines()
+
+    - name: Retrieve remote name, local/remote interface
+      set_fact:
+        show_lldp_list: "{{ output | regex_findall('^(\\S+)\\s+(\\S+)\\s+\\d+\\s+\\S+\\s+(\\S+)', multiline=True) }}"
+
+    - name: show lldp neighbors
+      debug:
+        var: show_lldp_list
