@@ -1,0 +1,26 @@
+---
+- name: Use regex search to display the sw version
+  hosts: arista
+  gather_facts: False
+  vars:
+    - cli_cmd: show version
+  tasks:
+    - name: Execute the command {{ cli_cmd }}
+      cli_command:
+        command: "{{ cli_cmd }}"
+      register: output
+
+    - set_fact:
+        output: "{{ output.stdout }}"
+
+    - debug:
+        var: output.splitlines()
+
+    - name: Retrieve software version
+      set_fact: 
+        sw_version: "{{ output | regex_search('^Software image version: (\\S+)', '\\1', multiline=True) }}"
+
+    - name: Display the software version on each device
+      debug:
+        var: sw_version
+
