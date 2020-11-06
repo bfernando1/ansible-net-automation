@@ -1,0 +1,27 @@
+---
+- name: Create a custom dictionary using the combine Jinja2 filter
+  hosts: nxos
+  gather_facts: False
+  vars:
+    ntc_template: "cisco_nxos_show_lldp_neighbors.template"
+    cli_cmd: show lldp neighbors
+  tasks:
+    - name: Execute the command {{ cli_cmd }}
+      cli_command:
+        command: "{{ cli_cmd }}"
+      register: output
+    
+    - debug:
+        var: output.stdout
+
+    - name: Format data to json output with textfsm
+      set_fact:
+        output_dict: "{{ output.stdout | parse_cli_textfsm(ntc_template) }}"
+    
+    - name: Combine local interface and neighbor into a new dict
+      set_fact:
+        lldp_dict: "{{ lldp_dict | default({}) | combine({item['LOCAL_INTERFACE']: item['NEIGHBOR']}) }}"
+      loop: "{{ output_dict }}"
+    
+    - debug:
+        var: lldp_dict
