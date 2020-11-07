@@ -1,0 +1,19 @@
+---
+- name: Use jinja2 lookups to execute a playbook
+  hosts: arista
+  gather_facts: False
+  vars:
+    ansible_user: pyclass
+    cli_cmd: show vlan
+  tasks:
+    - name: Retrive password from enviornment variables
+      set_fact:
+        ansible_ssh_pass: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
+    
+    - name: Execute {{ cli_cmd }}
+      eos_command:
+        commands: "{{ cli_cmd }} "
+      register: output
+
+    - debug:
+        var: output.stdout_lines[0]
