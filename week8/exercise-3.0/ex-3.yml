@@ -1,0 +1,32 @@
+---
+- name: Create a custom dictionary using the mac-address table
+  hosts: arista
+  gather_facts: False
+  vars:
+    cli_cmd: sh mac address-table
+  tasks:
+    - name: Execute command {{ cli_cmd }}
+      cli_command:
+        command: "{{ cli_cmd }} | json"
+      register: output
+
+    - name: Parse to mac address dictionary
+      set_fact:
+        output_dict: "{{ output.json.unicastTable.tableEntries }}"
+
+    - name: Retrieve the interface and mac address
+      set_fact:
+        mac_addr: "{{ output_dict | map(attribute='macAddress') | list }}"
+        intf: "{{ output_dict | map(attribute='interface') | list }}"
+   
+    - name: Create a list of lists using zip
+      set_fact:
+        new_struct: "{{ mac_addr | zip(intf) | list }}" 
+
+    - name: Create a dictionary with mac address as the key
+      set_fact:
+        mac_dict: "{{ dict(new_struct) }}"
+
+    - name: Display the results of the table
+      debug:
+        var: mac_dict
