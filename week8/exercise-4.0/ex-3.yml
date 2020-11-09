@@ -1,0 +1,24 @@
+---
+- name: Create a list of mac addresses 
+  hosts: arista
+  gather_facts: False
+  vars:
+    cli_cmd: sh mac address-table
+  tasks:
+    - name: Execute command {{ cli_cmd }}
+      cli_command:
+        command: "{{ cli_cmd }} | json"
+      register: output
+
+    - name: Find mac addresses from the output
+      set_fact:
+        output_dict: "{{ output.json.unicastTable.tableEntries }}"
+
+    - name: Create a list of mac addresses
+      set_fact:
+        mac_list: "{{ mac_list | default ([]) + [item['macAddress']] }}"
+      loop: "{{ output_dict }}"
+
+    - name: Display the results
+      debug:
+        var: mac_list
