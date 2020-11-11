@@ -1,0 +1,14 @@
+---
+
+- name: Exercise6e - fixed errors: Wrong module for device
+  hosts: juniper
+  gather_facts: False
+
+  tasks:
+    - name: Executing command
+      junos_command:
+        commands: show interfaces terse
+      register: output
+
+    - debug:
+        msg: "{{ output }}"

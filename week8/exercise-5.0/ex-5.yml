@@ -1,0 +1,42 @@
+---
+- name: Compare vlans against devices
+  hosts: nxos
+  gather_facts: False
+  tasks:
+    - name: Configure vlans on devices
+      nxos_vlan:
+        vlan_id: "{{ item.vlan_id }}"
+        state: present
+        name: "{{ item.name }}"
+      loop: "{{ vlans }}"
+
+    - name: Save vlan output as a variable
+      nxos_command:
+        commands: sh vlan | json
+      register: output
+
+    - name: Retrieve vlan information from output
+      set_fact:
+        output_strip: "{{ output.stdout[0].TABLE_vlanbrief.ROW_vlanbrief }}" 
+
+    - name: Generate list of vlans
+      set_fact:
+        vlans: "{{ output_strip | map(attribute='vlanshowbr-vlanid') | list }}"
+
+    - debug:
+        var: vlans
+
+    - name: View common vlans between nxos1 and nxos2
+      debug:
+        msg: "Common vlans: {{ vlans | intersect(hostvars['nxos2']['vlans']) }}"
+      when: inventory_hostname == 'nxos1'
+    
+    - name: View unique vlans only on nxos1
+      debug:
+        msg: "Unique vlans on nxos1: {{ vlans | difference(hostvars['nxos2']['vlans']) }}"
+      when: inventory_hostname == 'nxos1'
+
+    - name: View unique vlans only on nxos2
+      debug:
+        msg: "Unique vlans on nxos2: {{ vlans | difference(hostvars['nxos1']['vlans']) }}"
+      when: inventory_hostname == 'nxos2'
