@@ -1,6 +1,6 @@
 ---
 
-- name: Exercise6g - here there be errors.
+- name: Exercise6g - fixed errors. Misplaced closing curly braces on set_fact
   hosts: nxos
   gather_facts: False
   vars:
@@ -14,7 +14,7 @@
 
     - name: TextFSM conversion
       set_fact:
-        show_lldp: "{{ output.stdout | parse_cli_textfsm(fsm_template) }}"
+        show_lldp: "{{ output.stdout[0] | parse_cli_textfsm(fsm_template) }}"
 
     - debug:
         msg: "{{ show_lldp }}"
